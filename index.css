@@ -1,0 +1,216 @@
+:root {
+    --bg-color: #121212;
+    /* Dark cinematic background */
+    --text-color: #ffffff;
+    --accent-color: #e50914;
+    /* Cinema Red */
+    --nav-bg: rgba(20, 20, 20, 0.85);
+    /* Glassmorphism background */
+    --nav-border: rgba(255, 255, 255, 0.1);
+    --font-primary: 'Cairo', sans-serif;
+    --transition-speed: 0.3s;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-primary);
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+/* Navbar Styling */
+/* Navbar Styling */
+.navbar {
+    position: fixed;
+    top: 0;
+    inset-inline-start: 0;
+    /* Logical left/right */
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 5%;
+
+    /* Default State (At Top): Transparent for cinematic feel */
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border-bottom: 1px solid transparent;
+
+    z-index: 1000;
+    transition: all var(--transition-speed) ease;
+}
+
+/* Scrolled State: Fixed appearance with background */
+.navbar.scrolled {
+    background: var(--nav-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--nav-border);
+    padding: 0.8rem 5%;
+    /* Slightly smaller padding for compact look */
+}
+
+/* Force Left-to-Right visual order even in RTL for this specific request:
+   Logo on Left, Links on Right.
+   In RTL, natural order is R->L. We use row-reverse to flip it back to L->R visually. */
+html[dir="rtl"] .navbar {
+    flex-direction: row-reverse;
+}
+
+.logo-container {
+    /* Ensure visibility if logo is dark/transparent */
+    background: rgba(255, 255, 255, 0.9);
+    padding: 5px 12px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+}
+
+.logo-container .logo {
+    height: 45px;
+    width: auto;
+    object-fit: contain;
+    display: block;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 2rem;
+}
+
+.nav-item {
+    text-decoration: none;
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 600;
+    font-size: 1.1rem;
+    position: relative;
+    padding: 0.5rem 1rem;
+    transition: color var(--transition-speed) ease;
+}
+
+.nav-item:hover,
+.nav-item.active {
+    color: var(--text-color);
+}
+
+/* The "Live Recording" Red Dot Effect */
+.nav-item.active::after {
+    content: '';
+    position: absolute;
+    top: 5px;
+    inset-inline-start: 5px;
+    /* Adapts to RTL (right) and LTR (left) */
+    width: 8px;
+    height: 8px;
+    background-color: var(--accent-color);
+    border-radius: 50%;
+    box-shadow: 0 0 0 0 rgba(229, 9, 20, 0.7);
+    animation: pulse-red 1.5s infinite;
+}
+
+@keyframes pulse-red {
+    0% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(229, 9, 20, 0.7);
+    }
+
+    70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 6px rgba(229, 9, 20, 0);
+    }
+
+    100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(229, 9, 20, 0);
+    }
+}
+
+/* Mobile Menu Toggle (Hamburger) */
+.mobile-menu-toggle {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+}
+
+.mobile-menu-toggle span {
+    width: 25px;
+    height: 3px;
+    background-color: var(--text-color);
+    border-radius: 2px;
+    transition: all var(--transition-speed);
+}
+
+/* Sections for demonstration */
+.section {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding-top: 80px;
+}
+
+.section h1 {
+    font-size: 3rem;
+    opacity: 0.5;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .nav-links {
+        position: fixed;
+        top: 0;
+        inset-inline-end: -100%;
+        /* Starts off-screen at the 'end' side */
+        width: 70%;
+        height: 100vh;
+        background: black;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 2rem;
+        transition: inset-inline-end var(--transition-speed) ease;
+
+        /* Shadow needs to flip based on direction */
+        box-shadow: -5px 0 15px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Reverse shadow for LTR (where end is right, so shadow goes left) 
+       or RTL (where end is left, so shadow goes right) */
+    html[dir="rtl"] .nav-links {
+        box-shadow: 5px 0 15px rgba(0, 0, 0, 0.5);
+    }
+
+    .nav-links.active {
+        inset-inline-end: 0;
+    }
+
+    .mobile-menu-toggle {
+        display: flex;
+        z-index: 1001;
+    }
+
+    .mobile-menu-toggle.active span:nth-child(1) {
+        transform: rotate(45deg) translate(5px, 6px);
+    }
+
+    .mobile-menu-toggle.active span:nth-child(2) {
+        opacity: 0;
+    }
+
+    .mobile-menu-toggle.active span:nth-child(3) {
+        transform: rotate(-45deg) translate(5px, -6px);
+    }
+}
